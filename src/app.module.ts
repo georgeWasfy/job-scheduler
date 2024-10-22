@@ -9,6 +9,8 @@ import { Job } from './jobs/models/job.model';
 import { JobsModule } from './jobs/jobs.module';
 import { PendingJob } from './pending-jobs/models/PendingJob.model';
 import { ScheduleModule } from '@nestjs/schedule';
+import { JobTypeModule } from './job-types/jobType.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -17,6 +19,7 @@ import { ScheduleModule } from '@nestjs/schedule';
       load: [databaseConfig],
     }),
     ScheduleModule.forRoot(),
+    EventEmitterModule.forRoot(),
     SequelizeModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
@@ -44,6 +47,7 @@ import { ScheduleModule } from '@nestjs/schedule';
       inject: [ConfigService],
     }),
     JobsModule,
+    JobTypeModule
   ],
   controllers: [],
   providers: [],
