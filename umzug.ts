@@ -54,3 +54,34 @@ export const migrator = new Umzug({
 });
 
 export type Migration = typeof migrator._types.migration;
+
+const pathToSeedingFolder = path.join(__dirname, 'database', 'seeders');
+
+export const seeder = new Umzug({
+    migrations: {
+        glob: ['database/seeders/*.ts', { cwd: __dirname }],
+    },
+    context: sequelize,
+    storage: new SequelizeStorage({ sequelize, modelName: 'seeder_meta' }),
+    logger: console,
+    create: {
+        folder: pathToSeedingFolder,
+        template: (filepath) => [
+            [
+                filepath,
+                fs
+                    .readFileSync(
+                        path.join(
+                            __dirname,
+                            'database',
+                            'template',
+                            'sample-seed.ts',
+                        ),
+                    )
+                    .toString(),
+            ],
+        ],
+    },
+});
+
+export type Seeder = typeof seeder._types.migration;
