@@ -21,7 +21,6 @@
     "db:migrate:up": "node migrate up",
     "db:migrate:down": "node migrate down",
     "db:seed": "node seed up"
-
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -29,6 +28,7 @@
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/sequelize": "^10.0.1",
+    "node-cron": "^3.0.3",
     "pg": "^8.13.0",
     "pg-hstore": "^2.3.4",
     "reflect-metadata": "^0.2.0",
