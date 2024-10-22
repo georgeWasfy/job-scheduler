@@ -27,8 +27,8 @@ export const up: Migration = async ({ context: sequelize }) => {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    time_interval: {
-      type: DataTypes.STRING,
+    interval_minutes: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     is_recurring: {

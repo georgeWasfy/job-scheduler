@@ -7,7 +7,7 @@ export const JobResourceSchema = z
     name: z.string(),
     job_type_id: z.number(),
     last_run_status: z.string(),
-    time_interval: z.string(),
+    interval_minutes: z.number(),
     is_recurring: z.boolean(),
     extra_attributes: z.object({}),
     last_run_at: z.date(),

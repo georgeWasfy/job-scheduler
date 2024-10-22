@@ -33,8 +33,8 @@ export class Job extends Model {
   @Column(DataType.STRING)
   last_run_status: string;
 
-  @Column(DataType.STRING)
-  time_interval: string;
+  @Column(DataType.INTEGER)
+  interval_minutes: number;
 
   @Column(DataType.BOOLEAN)
   is_recurring: string;
