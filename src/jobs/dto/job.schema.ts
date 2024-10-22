@@ -17,6 +17,15 @@ export const JobResourceSchema = z
   })
   .required();
 
+  export const PagingSchema = z
+    .object({
+      total: z.number(),
+      current_page: z.number(),
+      per_page: z.number(),
+    })
+    .required();
+
+    
 export const CreateJobSchema = JobResourceSchema.omit({
   id: true,
   created_at: true,
