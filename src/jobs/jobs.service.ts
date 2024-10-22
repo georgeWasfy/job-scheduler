@@ -5,7 +5,6 @@ import {
 } from '@nestjs/common';
 import { Sequelize } from 'sequelize-typescript';
 import { Meta, PaginatedRequestType } from '@base/schema/helpers.schema';
-import { Op, ValidationError } from 'sequelize';
 import { JobType } from '@base/job-types/models/JobType.model';
 import { CreateJobType, UpdateJobType } from './dto/job.schema';
 import { Job } from './models/job.model';
@@ -14,7 +13,6 @@ import { Job } from './models/job.model';
 export class JobsService {
   private defaultInclude = {
     model: JobType,
-    as: 'job_types',
     required: true,
   };
   constructor(private readonly sequelize: Sequelize) {}

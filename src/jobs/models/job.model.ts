@@ -7,6 +7,7 @@ import {
   UpdatedAt,
   Model,
   ForeignKey,
+  BelongsTo,
 } from 'sequelize-typescript';
 
 @Table({ timestamps: true, tableName: 'jobs' })
@@ -25,6 +26,9 @@ export class Job extends Model {
   @ForeignKey(() => JobType)
   @Column(DataType.INTEGER)
   job_type_id: number;
+
+  @BelongsTo(() => JobType)
+  jobType: JobType;
 
   @Column(DataType.STRING)
   last_run_status: string;

@@ -31,7 +31,7 @@ export class JobsController {
 
   @Get()
   async findAll(query: JobQueryType) {
-    return await this.jobService.list(query.paging);
+    return await this.jobService.list(query?.paging);
   }
 
   @Get(':id')
