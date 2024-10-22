@@ -7,6 +7,8 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { JobType } from './job-types/models/JobType.model';
 import { Job } from './jobs/models/job.model';
 import { JobsModule } from './jobs/jobs.module';
+import { PendingJob } from './pending-jobs/models/PendingJob.model';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -14,6 +16,7 @@ import { JobsModule } from './jobs/jobs.module';
       isGlobal: true,
       load: [databaseConfig],
     }),
+    ScheduleModule.forRoot(),
     SequelizeModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
@@ -35,7 +38,7 @@ import { JobsModule } from './jobs/jobs.module';
           },
         },
         database: configService.get('DATABASE.NAME'),
-        models: [JobType, Job],
+        models: [JobType, Job, PendingJob],
         logging: false,
       }),
       inject: [ConfigService],

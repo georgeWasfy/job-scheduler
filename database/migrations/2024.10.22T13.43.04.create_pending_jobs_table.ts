@@ -2,46 +2,25 @@ import { DataTypes, literal } from 'sequelize';
 import { Migration } from '../../umzug';
 
 export const up: Migration = async ({ context: sequelize }) => {
-  await sequelize.getQueryInterface().createTable('jobs', {
+  await sequelize.getQueryInterface().createTable('pending_jobs', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true,
     },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    job_type_id: {
+    job_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'job_types',
+        model: 'jobs',
         key: 'id',
       },
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE',
     },
-    last_run_status: {
+    status: {
       type: DataTypes.STRING,
-      allowNull: true,
-    },
-    time_interval: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    is_recurring: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: true,
-    },
-    extra_attributes: {
-      type: DataTypes.JSONB,
-      allowNull: true,
-    },
-    last_run_at: {
-      type: DataTypes.DATE,
       allowNull: true,
     },
     next_run_at: {
@@ -62,7 +41,7 @@ export const up: Migration = async ({ context: sequelize }) => {
   // Create the trigger that uses the function
   await sequelize.query(`
               CREATE TRIGGER set_updated_at
-              BEFORE UPDATE ON jobs
+              BEFORE UPDATE ON pending_jobs
               FOR EACH ROW EXECUTE PROCEDURE update_updated_at();
             `);
 };
@@ -70,7 +49,7 @@ export const up: Migration = async ({ context: sequelize }) => {
 export const down: Migration = async ({ context: sequelize }) => {
   // Drop the trigger and function first
   await sequelize.query(`
-          DROP TRIGGER IF EXISTS set_updated_at ON jobs;
+          DROP TRIGGER IF EXISTS set_updated_at ON pending_jobs;
         `);
-  await sequelize.getQueryInterface().dropTable('jobs');
+  await sequelize.getQueryInterface().dropTable('pending_jobs');
 };
