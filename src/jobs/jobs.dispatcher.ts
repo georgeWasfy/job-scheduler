@@ -27,6 +27,7 @@ export class JobsDispatchService {
           { next_run_at: { [Op.lte]: oneMinuteLater } },
           { next_run_at: null },
         ],
+        is_recurring: true
       },
     });
     for (let index = 0; index < jobsToSchedule.length; index++) {

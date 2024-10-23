@@ -8,6 +8,7 @@ import { Meta, PaginatedRequestType } from '@base/schema/helpers.schema';
 import { JobType } from '@base/job-types/models/JobType.model';
 import { CreateJobType, UpdateJobType } from './dto/job.schema';
 import { Job } from './models/job.model';
+import { PendingJob } from '@base/pending-jobs/models/PendingJob.model';
 
 @Injectable()
 export class JobsService {
@@ -19,6 +20,15 @@ export class JobsService {
   async create(createJobDto: CreateJobType): Promise<{ data: { job: Job } }> {
     try {
       const job = await Job.create(createJobDto);
+      if (createJobDto.is_recurring === false) {
+        const now = new Date();
+        const pendingJobData = {
+          job_id: job.id,
+          status: 'pending',
+          next_run_at: new Date(now.getTime() + job.interval_minutes * 60000),
+        };
+        const pendingJob = await PendingJob.create(pendingJobData);
+      }
       return { data: { job } };
     } catch (error) {
       throw new BadRequestException('Unable to create Job');
