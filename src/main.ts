@@ -13,7 +13,7 @@ async function bootstrap() {
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('docs', app, document);
+  SwaggerModule.setup('docs', app, { ...document, openapi: '3.1.0' });
   await app.listen(3000);
 }
 bootstrap();

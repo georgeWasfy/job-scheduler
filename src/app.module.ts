@@ -11,6 +11,7 @@ import { JobTypeModule } from './job-types/jobType.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { PendingJobsModule } from './pending-jobs/pendingJob.module';
 import { JobsHistoryModule } from './jobs-history/jobsHistory.module';
+import { JobHistory } from './jobs-history/models/jobHistory.model';
 
 @Module({
   imports: [
@@ -41,7 +42,7 @@ import { JobsHistoryModule } from './jobs-history/jobsHistory.module';
           },
         },
         database: configService.get('DATABASE.NAME'),
-        models: [JobType, Job, PendingJob],
+        models: [JobType, Job, PendingJob, JobHistory],
         logging: false,
       }),
       inject: [ConfigService],
