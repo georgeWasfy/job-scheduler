@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { JobTypeService } from './jobType.service';
+import { WorkerService } from './worker.service';
 
 @Module({
   controllers: [],
-  providers: [JobTypeService],
-  exports: [JobTypeService]
+  providers: [WorkerService],
+  exports: [WorkerService]
 })
 export class JobTypeModule {}

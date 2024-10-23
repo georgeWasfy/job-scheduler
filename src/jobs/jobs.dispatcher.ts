@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Sequelize } from 'sequelize-typescript';
 import { Cron } from '@nestjs/schedule';
 import { Job } from './models/job.model';
-import { Op, where } from 'sequelize';
+import { Op } from 'sequelize';
 import { PendingJob } from '@base/pending-jobs/models/PendingJob.model';
 import { JobDispatchEvent } from './events/job-dispatch.event';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -19,7 +19,6 @@ export class JobsDispatchService {
   @Cron('* * * * *')
   async populatePendingJobsTable() {
     let pendingJobs = [];
-    console.log('population run')
     const now = new Date();
     const oneMinuteLater = new Date(now.getTime() + 60000);
     const jobsToSchedule = await Job.findAll({
@@ -30,7 +29,6 @@ export class JobsDispatchService {
         ],
       },
     });
-    jobsToSchedule.forEach(x => console.log(x.id))
     for (let index = 0; index < jobsToSchedule.length; index++) {
       const job = jobsToSchedule[index];
         const pendingJob = {
@@ -50,12 +48,12 @@ export class JobsDispatchService {
   }
 
   // Every second Run
-  // @Cron('* * * * * *')
+  @Cron('* * * * * *')
   async dispatchJobEvent() {
     const now = new Date();
     const pendingJobs = await PendingJob.findAll({
       where: {
-        next_run_at: { [Op.gte]: now.toISOString() },
+        next_run_at: { [Op.lte]: now.toISOString() },
         status: 'pending'
       },
       include: [{ model: Job, include: [{ model: JobType }] }],
