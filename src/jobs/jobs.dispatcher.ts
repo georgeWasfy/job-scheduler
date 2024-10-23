@@ -19,61 +19,53 @@ export class JobsDispatchService {
   @Cron('* * * * *')
   async populatePendingJobsTable() {
     let pendingJobs = [];
-    let firstPendingJobs = [];
+    console.log('population run')
     const now = new Date();
     const oneMinuteLater = new Date(now.getTime() + 60000);
     const jobsToSchedule = await Job.findAll({
       where: {
         [Op.or]: [
           { next_run_at: { [Op.lte]: oneMinuteLater } },
-          { last_run_at: null },
+          { next_run_at: null },
         ],
       },
     });
+    jobsToSchedule.forEach(x => console.log(x.id))
     for (let index = 0; index < jobsToSchedule.length; index++) {
       const job = jobsToSchedule[index];
-      // First time to Run
-      if (job.last_run_at === null) {
-        const firstRunData = {
+        const pendingJob = {
           job_id: job.id,
           status: 'pending',
-          next_run_at: new Date(now.getTime() + job.interval_minutes * 60000),
+          next_run_at: new Date(now.getTime() + (job.interval_minutes * 60000)),
         };
 
-        pendingJobs.push(firstRunData);
-        firstPendingJobs.push({ ...firstRunData, id: job.id });
-      } else {
-        const pendingJobData = {
-          job_id: job.id,
-          status: 'pending',
-          next_run_at: job.next_run_at,
-        };
-        pendingJobs.push(pendingJobData);
-      }
+        pendingJobs.push(pendingJob);
     }
     await PendingJob.bulkCreate(pendingJobs);
-    for (let index = 0; index < firstPendingJobs.length; index++) {
-      const element = firstPendingJobs[index];
-      await Job.update(element, { where: { id: element.id } });
+    for (let index = 0; index < jobsToSchedule.length; index++) {
+      const job = jobsToSchedule[index];
+      const jobToUpdate = pendingJobs.find(pj => pj.job_id === job.id)
+      await Job.update({next_run_at: jobToUpdate?.next_run_at}, { where: { id: job.id } });
     }
   }
 
   // Every second Run
-  @Cron('* * * * * *')
+  // @Cron('* * * * * *')
   async dispatchJobEvent() {
     const now = new Date();
-    const oneMinuteLater = new Date(now.getTime() + 60000);
     const pendingJobs = await PendingJob.findAll({
       where: {
-        next_run_at: { [Op.lte]: oneMinuteLater.toISOString() },
+        next_run_at: { [Op.gte]: now.toISOString() },
+        status: 'pending'
       },
       include: [{ model: Job, include: [{ model: JobType }] }],
     });
     for (let index = 0; index < pendingJobs.length; index++) {
-      const element = pendingJobs[index];
+      const pendingJob = pendingJobs[index];
+      await PendingJob.update({status: 'in-progress'},{where: {id: pendingJob.id}})
       this.events.emit(
         'job.dispatch',
-        new JobDispatchEvent(element.job.jobType),
+        new JobDispatchEvent(pendingJob),
       );
     }
   }
