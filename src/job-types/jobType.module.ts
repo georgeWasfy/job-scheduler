@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { WorkerService } from './worker.service';
+import { WorkerService } from './jobType.worker.service';
 
 @Module({
   controllers: [],

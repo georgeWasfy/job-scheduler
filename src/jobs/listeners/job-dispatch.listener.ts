@@ -1,4 +1,4 @@
-import { WorkerService } from '@base/job-types/worker.service';
+import { WorkerService } from '@base/job-types/jobType.worker.service';
 import { PendingJob } from '@base/pending-jobs/models/PendingJob.model';
 import { PendingJobsService } from '@base/pending-jobs/pendingJob.service';
 import { Injectable } from '@nestjs/common';
@@ -14,8 +14,10 @@ export class JobDispatchListener {
   @OnEvent('job.dispatch')
   async handleJob(event: { pendingJob: PendingJob }) {
     const { pendingJob } = event;
-    const result = await this.workerService.runWorker(pendingJob.job.jobType.name);
-    console.log("🚀 ~ JobDispatchListener ~ handleJob ~ result:", result)
+    const result = await this.workerService.runWorker(
+      pendingJob.job.jobType.name,
+    );
+    console.log('🚀 ~ JobDispatchListener ~ handleJob ~ result:', result);
     await this.pendingJobService.remove(pendingJob.id);
   }
 }
