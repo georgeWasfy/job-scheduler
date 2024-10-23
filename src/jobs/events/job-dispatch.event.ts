@@ -1,5 +1,5 @@
-import { JobType } from '@base/job-types/models/JobType.model';
+import { PendingJob } from '@base/pending-jobs/models/PendingJob.model';
 
 export class JobDispatchEvent {
-  constructor(public readonly jobType: JobType) {}
+  constructor(public readonly pendingJob: PendingJob) {}
 }

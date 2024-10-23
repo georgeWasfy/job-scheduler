@@ -1,16 +1,20 @@
 import { JobTypeService } from '@base/job-types/jobType.service';
-import { JobType } from '@base/job-types/models/JobType.model';
+import { PendingJob } from '@base/pending-jobs/models/PendingJob.model';
+import { PendingJobsService } from '@base/pending-jobs/pendingJob.service';
 import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 
 @Injectable()
 export class JobDispatchListener {
-  constructor(private readonly jobTypeService: JobTypeService) {}
+  constructor(
+    private readonly jobTypeService: JobTypeService,
+    private readonly pendingJobService: PendingJobsService,
+  ) {}
 
   @OnEvent('job.dispatch')
-  async handleJob(event: { jobType: JobType }) {
-    const { jobType } = event;
-    switch (jobType.name) {
+  async handleJob(event: { pendingJob: PendingJob }) {
+    const { pendingJob } = event;
+    switch (pendingJob.job.jobType.name) {
       case 'Increment':
         this.jobTypeService.IncrementJobHandler();
         break;
@@ -23,5 +27,6 @@ export class JobDispatchListener {
       default:
         break;
     }
+    await this.pendingJobService.remove(pendingJob.id);
   }
 }

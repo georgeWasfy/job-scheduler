@@ -9,6 +9,7 @@ import { PendingJob } from './pending-jobs/models/PendingJob.model';
 import { ScheduleModule } from '@nestjs/schedule';
 import { JobTypeModule } from './job-types/jobType.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { PendingJobsModule } from './pending-jobs/pendingJob.module';
 
 @Module({
   imports: [
@@ -45,7 +46,8 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
       inject: [ConfigService],
     }),
     JobsModule,
-    JobTypeModule
+    JobTypeModule,
+    PendingJobsModule
   ],
   controllers: [],
   providers: [],
