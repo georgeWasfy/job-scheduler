@@ -10,6 +10,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { JobTypeModule } from './job-types/jobType.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { PendingJobsModule } from './pending-jobs/pendingJob.module';
+import { JobsHistoryModule } from './jobs-history/jobsHistory.module';
 
 @Module({
   imports: [
@@ -47,7 +48,8 @@ import { PendingJobsModule } from './pending-jobs/pendingJob.module';
     }),
     JobsModule,
     JobTypeModule,
-    PendingJobsModule
+    PendingJobsModule,
+    JobsHistoryModule
   ],
   controllers: [],
   providers: [],

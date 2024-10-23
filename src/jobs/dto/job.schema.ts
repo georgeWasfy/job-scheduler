@@ -35,7 +35,9 @@ export const CreateJobSchema = JobResourceSchema.omit({
   last_run_at: true,
 });
 
-export const UpdateJobSchema = CreateJobSchema.partial();
+export const UpdateJobSchema = CreateJobSchema.merge(
+  z.object({ last_run_at: z.date() }),
+).partial();
 
 export const JobQuerySchema = z.object({
   paging: PaginatedRequestSchema.optional(),
