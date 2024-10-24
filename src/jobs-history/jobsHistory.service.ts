@@ -24,7 +24,7 @@ export class JobsHistoryService {
     meta: Meta;
   }> {
     try {
-      const total = await Job.count({
+      const total = await JobHistory.count({
         where: { job_id },
       });
       const jobHistory = await JobHistory.findAll({

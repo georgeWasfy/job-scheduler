@@ -22,7 +22,7 @@ export class JobDispatchListener {
     const result = await this.workerService.runWorker(
       pendingJob.job.jobType.name,
     );
-    await this.jobService.update(pendingJob.job.id, {last_run_at: new Date()})
+    await this.jobService.update(pendingJob.job.id, {last_run_at: new Date(), last_run_status: 'successful'})
     await this.jobsHistoryService.create({
       job_data: { value: result },
       job_id: pendingJob.job.id,

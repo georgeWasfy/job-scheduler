@@ -46,7 +46,7 @@ export function ApiPaginationQuery(paginationSchema: any) {
   return applyDecorators(
     ApiQuery({
       required: false,
-      name: 'page',
+      name: 'paging',
       style: 'deepObject',
       explode: true,
       type: 'object',

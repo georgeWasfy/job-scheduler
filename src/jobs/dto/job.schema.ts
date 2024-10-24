@@ -36,7 +36,7 @@ export const CreateJobSchema = JobResourceSchema.omit({
 });
 
 export const UpdateJobSchema = CreateJobSchema.merge(
-  z.object({ last_run_at: z.date() }),
+  z.object({ last_run_at: z.date(), last_run_status: z.string() }),
 ).partial();
 
 export const JobQuerySchema = z.object({
